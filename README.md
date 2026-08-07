@@ -1,23 +1,15 @@
-Ambos arreglos solicitados han sido implementados y probados exitosamente:
+¡Hola! El backend en PostgreSQL + Node.js ya está activo y corriendo en el servidor CachyOS. 
 
-🛠️ Soluciones aplicadas:
-Campo hash en la respuesta de Login (POST /api/auth/login):
+Actualmente, como la PC se reinició, la URL del túnel HTTPS gratuito de Cloudflare ha cambiado a esta nueva dirección:
 
-Se ha incluido el campo "hash" del usuario dentro del JSON que responde el login.
-Prueba verificada:
-json
+🌐 **NUEVA BASE URL DE LA API (HTTPS):**
+`https://communities-probe-poster-tiny.trycloudflare.com`
 
+---
 
-{
-  "message": "¡Bienvenido de vuelta!",
-  "nick": "solariswat",
-  "isAdmin": true,
-  "hash": "s2_lcrh24k13uycl",
-  "accessToken": "...",
-  "refreshToken": "..."
-}
-Endpoint GET /api/bank_accounts/:nick:
+### 📋 Instrucción de Conexión:
 
-Agregado el endpoint individual. Devuelve los datos completos de la cuenta bancaria formateados para Firestore Bridge.
-Si la cuenta no existe, retorna estado HTTP 404 con { "error": "Cuenta no encontrada" }.
-El servicio papusbank.service ya ha sido actualizado y reiniciado.
+Por favor, actualiza la constante global de la API en el frontend (`API_URL`, `BACKEND_URL` o el archivo de configuración del bridge) apuntando exactamente a:
+
+```js
+const API_URL = "https://communities-probe-poster-tiny.trycloudflare.com/api";
