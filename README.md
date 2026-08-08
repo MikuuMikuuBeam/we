@@ -1,5 +1,26 @@
-Por favor actualiza la URL base de la API del backend de PapusBank en la configuración del frontend a la siguiente URL pública activa:
+¡Listo! He realizado los dos cambios necesarios:
 
-https://modified-factory-adapter-myth.trycloudflare.com/api
+1. 🗄️ Base de Datos (PostgreSQL):
+Agregadas las 15 columnas a la tabla users como VARCHAR(100) con DEFAULT NULL:
 
-Asegúrate de que todos los endpoints (auth, bank, users, bridge, transactions, store, etc.) apunten a esa dirección base.
+mushokurank
+berserkrank
+chainsawrank
+deathnoterank
+elfenrank
+rerank
+rimururank
+bocchirank
+vocaloidrank
+floresrank
+ben10rank
+godzillarank
+mharank
+nanatsurank
+frierenrank
+2. 📡 Endpoint PUT /api/users/:nick:
+Actualizado 
+src/routes/bridge.js
+ para mapear y aceptar todas estas columnas tanto si el frontend las envía exactamente en minúsculas (ej. frierenrank) como si las envía en camelCase (ej. frierenRank).
+
+Probado exitosamente con solicitudes de prueba. El backend ya guarda y responde los rangos de cada fandom.
