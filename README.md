@@ -1,42 +1,12 @@
-1. 🔐 Endpoints 2FA Backend Implementados
-POST /api/auth/login:
+¡Corregidos los dos errores 500! 🛠️🚀
 
-Si el usuario tiene twofa_enabled = true, responde:
-json
-
-
-{ "twofaRequired": true, "tempToken": "JWT_TEMP_TOKEN" }
-tempToken expira en 5 minutos, viene con flag isTemp2FA: true y no otorga acceso general.
-POST /api/auth/2fa/confirm:
-
-Body: { "tempToken": "...", "code": "123456" }
-Valida contra el secreto TOTP o contra un código de respaldo (BACKUP-XXXX-XXXX).
-Al usar un código de respaldo, se marca como usado en DB.
-En caso de éxito, retorna los tokens reales (accessToken, refreshToken, hash, etc.).
-En error, retorna 401 "Código inválido".
-POST /api/auth/2fa/setup (requiere auth JWT):
-
-Genera secreto TOTP con otplib y lo guarda en users.twofa_pending_secret.
-Responde { "secret": "...", "otpauthUrl": "otpauth://totp/PapusBank:nick...?secret=...&issuer=PapusBank" }.
-POST /api/auth/2fa/verify (requiere auth JWT):
-
-Body: { "code": "123456" }
-Verifica contra twofa_pending_secret.
-Marca twofa_enabled = true, mueve el secreto a twofa_secret, invalida el pendiente y genera 10 códigos de respaldo hasheados con SHA-256 (BACKUP-XXXX-XXXX).
-Responde { "backupCodes": ["BACKUP-XXXX-XXXX", ...] } en texto plano por única vez.
-POST /api/auth/2fa/disable (requiere auth JWT):
-
-Body: { "code": "123456" }
-Requiere TOTP válido para marcar twofa_enabled = false y limpiar secretos/backups.
-POST /api/auth/2fa/backup-codes (requiere auth JWT):
-
-Body: { "code": "123456" }
-Requiere TOTP válido para generar y retornar 10 nuevos códigos de respaldo.
-GET /api/user/:nick:
-
-Ahora incluye "twofa_enabled": true/false dentro de la respuesta.
-2. 🧹 Cleanup
-Encuesta id = 5 ("Test de votacion") borrada.
-Cuentas de prueba test_ranks_x y test_finger2 verificadas y eliminadas.
-3. ⚡ Operaciones Atómicas
-La ruta POST /api/bank/transfer fue optimizada usando UPDATE ... RETURNING balance, evitando la lectura previa con SELECT extra y eliminando condiciones de carrera por doble click.
+🔍 Causas de los 500 identificadas:
+Error de Mapeo en el Bridge SQL (bridge.js): Al intentar escribir twofa_pending_secret mediante PUT /api/users/:nick, el mapeador intentaba buscar twofapendingsecret en minúsculas y no lo encontraba en fieldMap, generando un error SQL no existe la columna «twofapendingsecret».
+Incompatibilidad con API de otplib v13: En la versión instalada de otplib (v13+), authenticator fue deprecado/removido en favor de generateSecret, generateURI y verifySync. La llamada a authenticator.options = { window: 1 } lanzaba un TypeError: Cannot set properties of undefined.
+🛠️ Soluciones aplicadas:
+src/routes/bridge.js: Se mapearon explícitamente todas las variantes (twofaEnabled, twofa_enabled, twofaSecret, twofaPendingSecret, twofapendingsecret, twofaBackupCodes, etc.) a sus columnas correspondientes en la DB.
+src/routes/auth.js: Se actualizaron todos los handlers de 2FA (/2fa/confirm, /2fa/setup, /2fa/verify, /2fa/disable, /2fa/backup-codes) para consumir la API moderna síncrona de otplib:
+otplib.generateSecret()
+otplib.generateURI({ label: nick, issuer: 'PapusBank', secret })
+otplib.verifySync({ token, secret })
+Probado y respondiendo correctamente (401 Token requerido en solicitudes sin autenticar en lugar de 500 Error interno).
