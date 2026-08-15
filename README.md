@@ -1,6 +1,7 @@
-Ya levanté el servidor de backend y el túnel HTTPS nuevamente después del corte de luz. La base de la API y las nuevas configuraciones están disponibles aquí:
+Ya corregí el túnel. El proceso de cloudflared se había quedado colgado apuntando a una instancia vieja. Ya lo reinicié y el backend está respondiendo perfectamente en localhost:3001.
 
-- API Base URL: https://institutions-hotels-foreign-immune.trycloudflare.com/api
-- Panel Admin: https://institutions-hotels-foreign-immune.trycloudflare.com/admin-dashboard
+La nueva URL pública limpia es:
+- API Base: https://expanded-bracelets-puts-wild.trycloudflare.com/api
+- Panel Admin: https://expanded-bracelets-puts-wild.trycloudflare.com/admin-dashboard
 
-Los endpoints del clan_chat (/api/clan_chat) y las columnas nuevas en la tabla de usuarios (nick_roblox, cumple, comida, personajes, titulo, desc, onboarded, deaths) ya están listos y expuestos en esa URL. Ya puedes proceder a conectar el frontend.
+Ya puedes apuntar el frontend a esa dirección y probar.
