@@ -1,7 +1,5 @@
-Ya corregí el túnel. El proceso de cloudflared se había quedado colgado apuntando a una instancia vieja. Ya lo reinicié y el backend está respondiendo perfectamente en localhost:3001.
+Actualiza la URL base de la API del backend para PapuWhats. La nueva URL pública HTTPS con todos los endpoints (/papuwhats/login, /papuwhats/2fa/confirm, /papuwhats/messages, /papuwhats/friends, etc.) es:
 
-La nueva URL pública limpia es:
-- API Base: https://expanded-bracelets-puts-wild.trycloudflare.com/api
-- Panel Admin: https://expanded-bracelets-puts-wild.trycloudflare.com/admin-dashboard
+https://location-married-walker-store.trycloudflare.com
 
-Ya puedes apuntar el frontend a esa dirección y probar.
+Por favor actualiza la constante de la API base en el código de la app para que todas las peticiones apunten a esta nueva dirección.
