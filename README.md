@@ -1,30 +1,32 @@
-¡ENCONTRÉ EL ERROR EXACTO EN LOS LOGS DEL SERVIDOR! 🎯
-
-El error que está saliendo en pantalla roja en la otra IA no es un fallo de JavaScript de contraseñas ni de 2FA, es un SyntaxError: Expected property name or '}' in JSON al intentar parsear el cuerpo del mensaje.
-
-📜 La traza exacta de error (Stack Trace) capturada del servidor Node.js:
-text
+Columna secret_achievements: Se ejecutó en PostgreSQL:
+sql
 
 
-SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
-    at JSON.parse (<anonymous>)
-    at parse (/home/mmmmmm/.../node_modules/body-parser/lib/types/json.js:96:19)
-    at /home/mmmmmm/.../node_modules/body-parser/lib/read.js:128:18
-    ...
-  body: '{\\'
-  type: 'entity.parse.failed'
-  statusCode: 400 / 500
-🔍 ¿Qué significa este error?
-Fíjate en esta propiedad del error: body: '{\\'.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS secret_achievements JSONB DEFAULT '[]';
+(La columna ya existe en users y persiste correctamente los arreglos JSON).
+Nuevas Tablas para Amigos (PapuWhats):
+friends (id, nick1, nick2, created_at, UNIQUE(nick1, nick2))
+friend_requests (id, from_nick, to_nick, status, created_at)
+2. 🛣️ Rutas y Endpoints en la API (/api vs /papuwhats)
+Endpoints de PapusBank original (/api/...):
 
-La app en Android está enviando un JSON mal formado o mal formateado en el cuerpo de la petición HTTP (body), por ejemplo enviando {\ o escando mal las comillas al hacer JSON.stringify().
+POST /api/auth/login y POST /api/auth/register siguen intactos. (El 404 del agente fue porque llamó a /auth/login sin el prefijo /api).
+GET /api/user/:nick / GET /api/users/:nick: Exponen explícitamente tanto secret_achievements como secretAchievements.
+PUT /api/users/:nick: Acepta tanto secret_achievements como secretAchievements en la lista blanca de actualización.
+Nuevos Endpoints para la app PapuWhats (/papuwhats/...):
 
-Cuando Node.js intenta hacer req.body mediante express.json(), colapsa antes de llegar al login porque el JSON recibido desde Android no es un JSON válido.
-
-🛠️ ¿Cómo solucionarlo?
-En el backend (Parche de seguridad): Acabo de agregar un middleware especial en Express para capturar cuerpos JSON mal formados de los clientes y responder un HTTP 400 JSON Malformado sin tirar la petición.
-En la App de Android (Otra IA): La otra IA debe revisar cómo está enviando el cuerpo en fetch / Retrofit / HttpClient.
-Incorrecto: body: "{\"nick\": \"solariswat\",}" o concatenar strings manualmente creando {\.
-Correcto: Usar JSON.stringify({ nick: 'solariswat', password: '...' }) asegurando que los Headers incluyan 'Content-Type': 'application/json'.
-Pásale este Stack Trace exacto y la explicación a la otra IA para que corrija la formación del JSON en la app de Android. 👍
-
+POST /papuwhats/login (soporta claves bcrypt y hashPass de PapusBank, devuelve twofaRequired si tiene 2FA).
+POST /papuwhats/2fa/confirm
+GET /papuwhats/messages y POST /papuwhats/messages
+PUT /papuwhats/messages/:id y DELETE /papuwhats/messages/:id
+GET /papuwhats/friends y POST /papuwhats/friends/request, /accept, /reject, DELETE /friends/:nick
+GET /papuwhats/conversations
+3. 🌐 CORS y Middleware
+Se agregó configuración permisiva de CORS para los endpoints /papuwhats/* (Access-Control-Allow-Origin: *) para evitar bloqueos desde aplicaciones nativas en Android.
+Se agregaron validaciones con try/catch y sanitización en hashPass(p, salt) para garantizar que peticiones con contraseñas o hashes malformados respondan 401 Credenciales incorrectas en lugar de crash 500.
+🖥️ Panel Admin (Localhost)
+Se añadieron herramientas en la interfaz web local:
+Cambiador/reseteador de contraseñas de usuarios.
+Columna con geolocalización de IPs.
+Pestaña de historial de chats privados (DMs) de PapuWhats con opción de moderación.
+Todo el backend está en producción en CachyOS corriendo como servicio systemd (papusbank.service y papusbank-tunnel.service).
