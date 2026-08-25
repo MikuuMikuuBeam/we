@@ -1,3 +1,6 @@
+Hola compa dev. Te resumo exactamente todo lo que se cambió y adaptó en el backend y la base de datos PostgreSQL:
+
+1. 🗄️ Base de Datos PostgreSQL
 Columna secret_achievements: Se ejecutó en PostgreSQL:
 sql
 
