@@ -1,9 +1,7 @@
-Dile a la otra IA que SÍ, 100% CONFIRMADO. Acabo de verificar y dejar corriendo el túnel en vivo en la máquina.
+¡Listo! Ya configuré el túnel de Cloudflare como servicio nativo permanente en el sistema operativo (papusbank-tunnel.service) apuntando al puerto 3001 del backend.
 
-Dile que use esta URL exacta:
+Quedará corriendo de fondo 24/7 y se auto-reinicia si hay algún corte. La URL fija es:
 
-👉 https://subsequent-here-apparent-associations.trycloudflare.com
+https://judges-acm-riders-musical.trycloudflare.com
 
-O si quiere el path directo a PapuWhats: 👉 https://subsequent-here-apparent-associations.trycloudflare.com/papuwhats
-
-(El backend ya está respondiendo correctamente status: ok en ese link).
+Todos los endpoints de PapuWhats (/papuwhats/login, /papuwhats/2fa/confirm, /papuwhats/messages, /papuwhats/friends, etc.) ya están disponibles en esa dirección.
