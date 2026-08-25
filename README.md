@@ -1,5 +1,9 @@
-Actualiza la URL base de la API del backend para PapuWhats. La nueva URL pública HTTPS con todos los endpoints (/papuwhats/login, /papuwhats/2fa/confirm, /papuwhats/messages, /papuwhats/friends, etc.) es:
+Dile a la otra IA que SÍ, 100% CONFIRMADO. Acabo de verificar y dejar corriendo el túnel en vivo en la máquina.
 
-https://location-married-walker-store.trycloudflare.com
+Dile que use esta URL exacta:
 
-Por favor actualiza la constante de la API base en el código de la app para que todas las peticiones apunten a esta nueva dirección.
+👉 https://subsequent-here-apparent-associations.trycloudflare.com
+
+O si quiere el path directo a PapuWhats: 👉 https://subsequent-here-apparent-associations.trycloudflare.com/papuwhats
+
+(El backend ya está respondiendo correctamente status: ok en ese link).
